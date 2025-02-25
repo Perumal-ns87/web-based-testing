@@ -1,0 +1,30 @@
+name: Open Custom URL on Windows VM
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual triggering of the workflow with a custom URL
+
+jobs:
+  open-url:
+    runs-on: ubuntu-latest  # GitHub CI runner (you can use any runner)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH Key for Access
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Open Custom URL on Windows VM
+        run: |
+          URL=${{ github.event.inputs.url || 'https://www.google.com' }}  # Default URL is google if not provided
+          echo "Opening URL: $URL"
+          ssh -o StrictHostKeyChecking=no user@your-windows-vm-ip "
+            powershell -Command 'Start-Process chrome.exe $URL'
+          "
+        env:
+          URL: ${{ github.event.inputs.url || 'https://www.google.com' }}  # Use URL from input or default to google
