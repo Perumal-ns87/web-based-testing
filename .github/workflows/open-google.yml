@@ -23,7 +23,7 @@ jobs:
         run: |
           URL=${{ github.event.inputs.url || 'https://www.google.com' }}  # Default URL is google if not provided
           echo "Opening URL: $URL"
-          ssh -o StrictHostKeyChecking=no user@your-windows-vm-ip "
+          ssh -o StrictHostKeyChecking=no peruadmin@172.174.39.8 "
             powershell -Command 'Start-Process chrome.exe $URL'
           "
         env:
